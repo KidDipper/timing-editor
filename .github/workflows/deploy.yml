@@ -9,6 +9,10 @@ permissions:
   pages: write
   id-token: write
 
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -19,11 +23,20 @@ jobs:
           node-version: 20
       - run: npm ci
       - run: npm run build
+      # ★ Pages を初期化（必須）
+      - uses: actions/configure-pages@v5
+      # ビルド成果物をアップロード
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
+
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/deploy-pages@v4
+      # ★ 初期化してからデプロイ
+      - id: deployment
+        uses: actions/deploy-pages@v4
