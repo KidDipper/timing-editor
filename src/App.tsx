@@ -176,9 +176,8 @@ export default function App() {
           </details>
         </section>
 
-        <section className="preview">
+        <section className="preview" role="region" aria-label="プレビュー">
           <h2>プレビュー</h2>
-          {/* WaveDrom はこの中の <script type="WaveDrom"> を SVG に置換 */}
           <div ref={containerRef} className="wavedrom" />
         </section>
       </main>
